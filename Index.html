@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Omni-Hunter</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            background: #e9f7ef;
+            color: #1e7e34;
+            font-weight: bold;
+        }
+
+        .erro {
+            background: #fdecea;
+            color: #b71c1c;
+        }
+
+        pre {
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Omni-Hunter</h1>
+
+    <div id="status" class="status">
+        Página funcionando.
+    </div>
+
+    <div id="conteudo"></div>
+
+</div>
+
+<script>
+
+    const parametros =
+        new URLSearchParams(window.location.search);
+
+    const code =
+        parametros.get("code");
+
+    const state =
+        parametros.get("state");
+
+    const erro =
+        parametros.get("error");
+
+    const descricao =
+        parametros.get("error_description");
+
+    const status =
+        document.getElementById("status");
+
+    const conteudo =
+        document.getElementById("conteudo");
+
+
+    /*
+     * Caso o Mercado Livre devolva erro
+     */
+    if (erro) {
+
+        status.className = "status erro";
+
+        status.textContent =
+            "Autorização recusada pelo Mercado Livre.";
+
+        conteudo.innerHTML = `
+            <p><strong>Erro:</strong></p>
+
+            <pre>${erro}</pre>
+
+            <p><strong>Descrição:</strong></p>
+
+            <pre>${descricao || ""}</pre>
+        `;
+
+    }
+
+
+    /*
+     * Caso o Mercado Livre devolva um código
+     */
+    else if (code) {
+
+        status.textContent =
+            "Código de autorização recebido com sucesso.";
+
+        conteudo.innerHTML = `
+
+            <p>
+                O Mercado Livre redirecionou
+                corretamente para o Omni-Hunter.
+            </p>
+
+            <p>
+                <strong>CODE</strong>
+            </p>
+
+            <pre>${code}</pre>
+
+            <p>
+                <strong>STATE</strong>
+            </p>
+
+            <pre>${state || ""}</pre>
+
+            <p>
+                Agora você deve copiar a URL completa
+                desta página e colá-la no Termux.
+            </p>
+        `;
+
+    }
+
+
+    /*
+     * Página acessada normalmente
+     */
+    else {
+
+        conteudo.innerHTML = `
+
+            <p>
+                O site está ativo e pronto para
+                receber o retorno da autorização
+                do Mercado Livre.
+            </p>
+
+        `;
+
+    }
+
+</script>
+
+</body>
+</html>
